@@ -12,23 +12,27 @@ let succ e =
     next' allValues
 
 let baseGameDeck =
-    let rec deck' l = 
+    let rec startOffDeck l = 
         match l with
         | head :: tail & {Color = Color.Yellow; Number = Number.Five} :: _ 
             -> head :: tail
         | {Color = color; Number = Number.Five} as head :: tail 
-            -> deck' ({Color = (succ color); Number = Number.One } :: head :: tail)
+            -> startOffDeck ({Color = (succ color); Number = Number.One } :: head :: tail)
         | {Color = color; Number = number} as head :: tail 
-            -> deck' ({Color = color; Number = (succ number)} :: head :: tail)
+            -> startOffDeck ({Color = color; Number = (succ number)} :: head :: tail)
         | [] 
-            -> deck' [{Color = Color.Red; Number = Number.One}]
-    let rec deck'' l =
+            -> startOffDeck [{Color = Color.Red; Number = Number.One}]
+    let rec replicateDeck l =
         match l with
-        | {Color = _; Number = Number.One} as head :: tail -> List.replicate 3 head |> List.append (deck'' tail)
-        | {Color = _; Number = Number.Five} as head :: tail -> head :: (deck'' tail)
-        | head :: tail -> List.replicate 2 head |> List.append (deck'' tail)
-        | [] -> []
-    [] |> deck' |> deck'' |> List.sortBy (fun {Color=color; Number=number} -> color, number)
+        | {Color = _; Number = Number.One} as head :: tail 
+            -> List.replicate 3 head |> List.append (replicateDeck tail)
+        | {Color = _; Number = Number.Five} as head :: tail 
+            -> head :: (replicateDeck tail)
+        | head :: tail 
+            -> List.replicate 2 head |> List.append (replicateDeck tail)
+        | [] 
+            -> []
+    [] |> startOffDeck |> replicateDeck |> List.sortBy (fun {Color=color; Number=number} -> color, number)
 
 [<EntryPoint>]
 let main _ =

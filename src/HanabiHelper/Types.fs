@@ -1,8 +1,8 @@
 module HanabiHelper.Types
 
-type Color = Red | White | Blue | Green | Yellow
+type Color = Red = 0 | White = 5 | Blue = 23 | Green =  45 | Yellow = 46
 
-type Number = One | Two | Three | Four | Five
+type Number = One = 1 | Two = 2 | Three = 3 | Four = 4 | Five = 5
 
 type Clue =
     | Color of Color
